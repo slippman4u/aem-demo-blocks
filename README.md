@@ -15,4 +15,5 @@ A shared library of AEM Edge Delivery Services blocks for demo use.
 | Block | Description |
 |---|---|
 | xray | AEP-style Real Time Customer Profile x-ray panel |
+| shopthelook | Shop the look for retail apparel sales |
 
