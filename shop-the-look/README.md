@@ -1,44 +1,40 @@
 # Shop the Look Block
 
-## Overview
+A product carousel block that displays a curated set of products in a horizontal scrollable slider. Each product tile shows an image, name, price, and a link to the product page.
 
-An editorial "Shop the Look" experience presenting a hero image, fashion editorial copy, a full-outfit model image, and a horizontally scrollable product slider. Each product tile is populated live from the Catalog Service via GraphQL. Clicking a tile navigates to the product's PDP.
+![Shop the Look](images/shop-the-look.png)
 
-## Configuration
+---
 
-The block is authored as a two-column table in a Google Doc or Word document. Each row has a label in the first cell and the value in the second:
+## Setup
 
-| Label | Value |
-|---|---|
-| `hero-image` | Paste an image or enter an image URL |
-| `editorial` | Rich text — 2–3 editorial paragraphs |
-| `look-image` | Paste an image or enter an image URL |
-| `product` | `/products/{url-key}/{sku}` — one row per product |
-| `product` | `/products/{url-key}/{sku}` — repeat for additional products |
+### Step 1 — Copy the block files into your project
 
-- **Images**: accepts a Google Docs `<picture>` element, a bare `<img>`, a hyperlink, or a plain-text `https://` URL.
-- **Products**: add as many `product` rows as needed — each becomes one slide in the slider.
+Copy these 3 files into a folder called `shop-the-look` inside your project's `blocks` folder:
 
-## Integration
+- `shop-the-look.js`
+- `shop-the-look.css`
+- `README.md`
 
-### GraphQL
+Commit and push to GitHub.
 
-Product data (name, price, image, short description) is fetched using `fetchProductData(sku, { skipTransform: true })` from `@dropins/storefront-pdp/api.js`, with the Catalog Service endpoint inherited via `setEndpoint(CS_FETCH_GRAPHQL)`. This is the same pattern used by `scripts/components/commerce-mini-pdp`.
+### Step 2 — Add the block to your page in DA.live
 
-The block expects `initializeCommerce()` (called by `scripts/scripts.js` during eager load) to have configured `CS_FETCH_GRAPHQL` before `decorate()` runs.
+1. Open the page where you want the carousel to appear
+2. Insert a new table with 1 column
+3. Row 1: type **shop-the-look**
+4. Add one row per product — paste the product page URL into each row
+5. Click Publish
 
-### PDP links
+### Step 3 — Test it
 
-Product tile links are generated with `getProductLink(urlKey, sku)` from `scripts/commerce.js`, which applies store root-path localisation automatically.
+1. Open your live page URL
+2. You should see a horizontal product carousel
+3. Use the arrows to scroll through the products
 
-## Behavior patterns
+---
 
-- **Slider**: CSS `scroll-snap-type: x mandatory` with no JavaScript library. On mobile (~85 % viewport width per slide) and desktop (~33 % — three tiles visible).
-- **Nav arrows**: Prev/Next buttons call `scrollBy()` by one slide width. Only rendered when more than one product is authored.
-- **Load order**: Slide DOM nodes are appended synchronously (preserving authored order) before any fetches start. Each slide shows an animated shimmer skeleton until its GraphQL response arrives.
+## Updating products
 
-## Error handling
+To change the products displayed, edit the URLs in your DA.live page table and republish. No code changes needed.
 
-- If `fetchProductData` throws or returns no `sku`, the slide renders a neutral "Product unavailable" placeholder.
-- Missing product images fall back to a neutral `background-color` placeholder `<div>`.
-- `extractSku()` gracefully returns `null` for malformed URLs, which triggers the unavailable placeholder rather than an uncaught exception.
