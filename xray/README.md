@@ -1,50 +1,77 @@
-# xray
+# XRay Block
 
-## Overview
+An AEP-style Real Time Customer Profile viewer that slides in from the left when the Adobe logo button is clicked. Shows profile identities, attributes, audience segments, and behavioral events — all driven by a DA.live spreadsheet.
 
-A fixed-position AEP-style Real Time Customer Profile x-ray panel. It renders nothing in the page flow — instead it injects a small Adobe logo trigger button and a slide-out panel into `<body>`. Clicking the trigger slides the panel in from the left, giving a live view of the visitor's AEP profile, audience memberships, and event history.
+![Profile Tab](images/Profile.png)
 
-## Configuration
+![Audiences Tab](images/Audiences.png)
 
-Data is fetched from `/xray/xray-data.json`, which is a DA.live published spreadsheet with three named sheets:
+![Events Tab](images/Events.png)
 
-| Sheet | Columns |
-|---|---|
-| `profile` | `key`, `value` |
-| `audiences` | `timestamp`, `status`, `name` |
-| `events` | `date`, `time`, `data`, `event-type` |
+---
 
-The profile sheet rows use the following keys: `ecid`, `email`, `name`, `gender`, `birth-date`, `address`, `loyalty-level`, `loyalty-points`.
+## Setup
 
-To change the data source, update `DATA_URL` at the top of `xray.js`.
+### Step 1 — Copy the block files into your project
 
-## Integration
+Copy these 3 files into a folder called `xray` inside your project's `blocks` folder:
 
-Add a block named **xray** to any page document. The block content itself is hidden — its only job is to trigger the `decorate()` function.
+- `xray.js`
+- `xray.css`
+- `README.md`
 
-```
-+-------+
-| xray  |
-+-------+
-|       |
-+-------+
-```
+Commit and push to GitHub.
 
-The block can be placed anywhere in the document. No block content or configuration columns are required.
+### Step 2 — Create your data sheet in DA.live
 
-## Behavior
+1. Go to your site in DA.live
+2. Create a new folder called `xray`
+3. Inside that folder create a new Sheet called `xray-data`
+4. Create exactly 3 tabs named: `profile`, `audiences`, `events`
+5. Copy the column headers and sample rows from the CSV files in the `templates` folder
+6. Update the values to match your demo industry vertical
+7. Click Publish
 
-- **Trigger button** — fixed at `top: 16px, left: 16px`, always visible. Clicking it opens or closes the panel.
-- **Panel** — slides in from the left at 420px wide, overlays page content. An overlay backdrop appears behind the panel; clicking it closes the panel.
-- **Data fetching** — the JSON is fetched lazily on the first panel open. Subsequent opens reuse the cached data. The refresh icon in the panel header re-fetches the data.
-- **Tabs** — five tabs are rendered: Profile and Events are functional; Offers, Architecture, and Debug render an empty panel.
-- **Profile tab** — four accordions, all expanded by default:
-  - *Identities* — ECID (monospace) and email address
-  - *Attributes* — name, gender, birth date, address, loyalty level, loyalty points
-  - *Audiences* — each audience as timestamp + status on line one, segment name on line two
-  - *Utilities* — empty, reserved for future use
-- **Events tab** — vertical timeline. Each event shows the date/time, the data value, and the event type as a small uppercase label.
+**profile tab columns:** `value`, `key`
 
-## Error handling
+![Profile tab setup](images/Profile.png)
 
-If the fetch fails, an inline error message is shown inside the panel. The refresh button in the panel header re-attempts the fetch from scratch, allowing recovery without a page reload.
+**audiences tab columns:** `timestamp`, `status`, `name`
+
+![Audiences tab setup](images/Audiences.png)
+
+**events tab columns:** `date`, `time`, `data`, `event-type`
+
+The `event-type` column can be anything: PRODUCT VIEW, ADD TO CART, LOGIN, CHECKOUT, etc.
+
+![Events tab setup](images/Events.png)
+
+### Step 3 — Add the block to your page in DA.live
+
+1. Open the page where you want the panel to appear
+2. Scroll to the bottom of the page, above the metadata block
+3. Insert a new table with 1 column and 2 rows
+4. Row 1: type **xray**
+5. Row 2: type **/xray/xray-data.json**
+6. Click Publish
+
+![Block configuration](images/Block.png)
+
+### Step 4 — Test it
+
+1. Open your live page URL
+2. You should see a small red Adobe A button in the top-left corner
+3. Click it — the profile panel slides in from the left
+4. Check the Profile and Events tabs to confirm your data is showing
+
+---
+
+## Updating demo data
+
+To change the profile for a different industry vertical, edit the values in your DA.live sheet and republish. No code changes needed.
+
+---
+
+## Templates
+
+Starter CSV files are in the `templates` folder. Use these as the base for your sheet columns and sample rows.
